@@ -1,15 +1,17 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import {useDispatch} from "react-redux";
+import {login} from "../../actions/login";
 
 export default function Login(){
-    const [formData, setFormData] = useState({ username: "", password: "" });
+    const [loginData, setLoginData] = useState({ name: "", password: "" });
     const location = useLocation(); 
     const [error, setError] = useState(location.state?.message || ""); // <-- Add this state to handle errors
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
-
+const dispatch=useDispatch()
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        setLoginData({ ...loginData, [e.target.name]: e.target.value });
     };
 
     const handleSubmit = async (e) => {
@@ -18,7 +20,14 @@ export default function Login(){
         setLoading(true);
         try {
             // await signin(formData); // Call API function
-            navigate("/dashboard"); // Redirect to homepage after successful login
+          const response= await  dispatch(login(loginData))
+          if (response?.result) {
+            alert('Login successful!');
+            navigate('/'); // Redirect to dashboard on success
+          } else {
+            alert('Login failed. Please check your credentials.');
+          }
+            // navigate("/dashboard"); // Redirect to homepage after successful login
         } catch (error) {
             console.error("Login failed", error.response?.data?.message || error.message);
             setError(error.response?.data?.message || "Login failed. Please try again.");
@@ -38,15 +47,15 @@ export default function Login(){
 
                     {/* the form */}
                     <form onSubmit={handleSubmit} >
-                        <label htmlFor="username">Username: </label>
-                        <input type="text" id="username"  className="text-white bg-slate-700 ml-2 rounded-xl p-2" name="username" value={formData.username} placeholder="Username" onChange={handleChange} required /> <br /> <br />
+                        <label htmlFor="name">Username: </label>
+                        <input type="text" id="name"  className="text-white bg-slate-700 ml-2 rounded-xl p-2" name="name" value={loginData.name} placeholder="Username" onChange={handleChange} required /> <br /> <br />
                         <label htmlFor="password">Password: </label>
-                        <input type="password" id="password" className="text-white bg-slate-700 ml-2 rounded-xl p-2" name="password" value={formData.password} placeholder="Password" onChange={handleChange} required /> <br /> <br />
+                        <input type="password" id="password" className="text-white bg-slate-700 ml-2 rounded-xl p-2" name="password" value={loginData.password} placeholder="Password" onChange={handleChange} required /> <br /> <br />
                         <button type="submit" disabled={loading} className="border-[1px] p-2 rounded-xl w-[30%] border-slate-600 shadow-sm shadow-yellow-400 hover:shadow-md hover:shadow-yellow-400 ">
                             Login 
                         </button>
                         {loading && <p className="text-[10px] text-sky-500 mt-4">Logging you in...</p>}
-                        {error && <p className="text-[10px] text-red-500 mt-4">{error}</p>} {/* Display error message if login fails */}
+                        {error && <p className="text-[10px] text-red-500 mt-4">{error}</p>}  {/* Display error message if login fails */}
                     </form> 
 
                     <br />

@@ -1,14 +1,16 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom"; 
+import {useDispatch} from "react-redux";
+import {signUp} from "../../actions/signup";
 
 export default function SignUp() {
-    const [formData, setFormData] = useState({ username: "", email: "", password: "" });
+    const [signUpData, setSignUpData] = useState({ name: "", email: "", password: "" });
     const [error, setError] = useState(""); // <-- Add this state to handle errors
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
-
+const dispatch=useDispatch()
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        setSignUpData({ ...signUpData, [e.target.name]: e.target.value });
     };
 
     const handleSubmit = async (e) => {
@@ -16,8 +18,10 @@ export default function SignUp() {
         setError(""); // Clear any previous error
         setLoading(true);
         try {
+       const response=await     dispatch(signUp(signUpData))
+       alert("Signup successful");
             // await signup(formData); // Call API function
-            navigate("/dashboard"); // Redirect to homepage after successful login
+            navigate("/"); // Redirect to homepage after successful login
         } catch (error) {
             console.error("Signup failed", error.response?.data?.message || error.message);
             setError(error.response?.data?.message || "Signup failed. Please try again.");
@@ -38,12 +42,12 @@ export default function SignUp() {
 
                     {/* the form */}
                     <form onSubmit={handleSubmit} >
-                        <label htmlFor="username">Username: </label>
-                        <input type="text" id="username"  className="text-white bg-slate-700 ml-2 rounded-xl p-2" name="username" value={formData.username} placeholder="Username" onChange={handleChange} required /> <br /> <br />
+                        <label htmlFor="name">Username: </label>
+                        <input type="text" id="name"  className="text-white bg-slate-700 ml-2 rounded-xl p-2" name="name" value={signUpData.name} placeholder="Username" onChange={handleChange} required /> <br /> <br />
                         <label htmlFor="password">Password: </label>
-                        <input type="password" id="password" className="text-white bg-slate-700 ml-2 rounded-xl p-2" name="password" value={formData.password} placeholder="Password" onChange={handleChange} required /> <br /> <br />
+                        <input type="password" id="password" className="text-white bg-slate-700 ml-2 rounded-xl p-2" name="password" value={signUpData.password} placeholder="Password" onChange={handleChange} required /> <br /> <br />
                         <label htmlFor="email">Email: </label>
-                        <input type="email" id="email" className="text-white bg-slate-700 ml-2 rounded-xl p-2" name="email" value={formData.email} placeholder="Your email" onChange={handleChange} required /> <br /> <br />
+                        <input type="email" id="email" className="text-white bg-slate-700 ml-2 rounded-xl p-2" name="email" value={signUpData.email} placeholder="Your email" onChange={handleChange} required /> <br /> <br />
                         <button type="submit" className="border-[1px] p-2 rounded-xl w-[30%] border-slate-600 shadow-sm shadow-yellow-400 hover:shadow-md hover:shadow-yellow-400">Sign Up</button>
                         {loading && <p className="text-[14px] text-sky-500 mt-4">Signing you up...</p>}
                         {error && <p className="text-[10px] text-red-500">{error}</p>} {/* Display error message if login fails */}
