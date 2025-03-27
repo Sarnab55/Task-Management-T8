@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { changepassword } from "../../api";
 
 export default function Generatepassword(){
-    const [formData, setFormData] = useState({ password: "", confirmpassword: ""});
+    const [formData, setFormData] = useState({email:"", password: "", confirmpassword: ""});
     const location = useLocation(); 
     const [error, setError] = useState(location.state?.message || "");
     const [loading, setLoading] = useState(false);
@@ -17,8 +18,20 @@ export default function Generatepassword(){
         setError(""); // Clear any previous error
         setLoading(true);
         try {
-            // await signin(formData); // --> the backend logic here
-            navigate("/"); // Redirect to homepage after successful login
+            if(formData.password == formData.confirmpassword){
+                const response =  await changepassword(formData); // --> the backend logic here
+                if(response.status === 200){
+                    alert("Password changed succesfully!");
+                    navigate("/"); 
+                }
+                else{
+                    setError("Some error occured!");
+                }// Redirect to homepage after successful login
+            }
+            else{
+                setError("Both entries must be same!");
+            }
+            
         } catch (error) {
             console.error("Login failed", error.response?.data?.message || error.message);
             setError(error.response?.data?.message || "Login failed. Please try again.");
@@ -30,7 +43,7 @@ export default function Generatepassword(){
 
     return (
         <>
-            <div className="bg-slate-950 h-screen w-screen flex flex-col items-center text-white">
+            <div className="bg-slate-950 -mb-10 h-screen w-screen flex flex-col items-center text-white">
                 {/* heading */}
                 <div className="mt-32 text-center text-sky-blue border-2 border-slate-50 rounded-xl p-5 md:w-[60%] sm:w-[60%] w-[80%]">
                     {/* sign in */}
@@ -39,6 +52,8 @@ export default function Generatepassword(){
 
                     {/* the form */}
                     <form onSubmit={handleSubmit} >
+                        <label htmlFor="email">Email : </label>
+                        <input type="text" id="email"  className="text-white bg-slate-700 ml-2 rounded-xl p-2" name="email" value={formData.email}  onChange={handleChange} required /> <br /> <br />
                         <label htmlFor="password">New Password: </label>
                         <input type="password" id="password"  className="text-white bg-slate-700 ml-2 rounded-xl p-2" name="password" value={formData.password} placeholder="enter new password" onChange={handleChange} required /> <br /> <br />
                         <label htmlFor="confirmpassword">Confirm password: </label>

@@ -23,7 +23,7 @@ const dispatch=useDispatch()
           const response= await  dispatch(login(loginData))
           if (response?.result) {
             alert('Login successful!');
-            navigate('/'); // Redirect to dashboard on success
+            navigate('/dashboard'); // Redirect to dashboard on success
           } else {
             alert('Login failed. Please check your credentials.');
           }
@@ -38,7 +38,7 @@ const dispatch=useDispatch()
 
     return (
         <>
-            <div className="bg-slate-950 h-screen w-screen flex flex-col items-center text-white">
+            <div className="bg-slate-950 h-screen -mb-10 w-full flex flex-col items-center text-white overflow-hidden">
                 {/* heading */}
                 <div className="mt-32 text-center text-sky-blue border-2 border-slate-50 rounded-xl p-5 md:w-[35%] sm:w-[60%] w-[80%]">
                     {/* sign in */}
