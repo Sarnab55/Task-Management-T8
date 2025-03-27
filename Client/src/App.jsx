@@ -6,6 +6,7 @@ import Login from './components/authentication/Login';
 import SignUp from './components/authentication/SignUp';
 import Forgotpassword from './components/authentication/Forgotpassword';
 import Generatepassword from './components/authentication/GeneratePassword';
+import Dashboard from './components/Content/Dashboard';
 // import './App.css'
 
 function App() {
@@ -26,6 +27,11 @@ function App() {
     {
       path: "/generatepassword",
       element: <Generatepassword></Generatepassword>
+    },
+    //dashboard
+    {
+      path: "/dashboard",
+      element: <Dashboard></Dashboard>
     }
   ]);
 

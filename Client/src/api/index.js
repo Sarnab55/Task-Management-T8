@@ -10,3 +10,5 @@ API.interceptors.request.use((req) => {
 
 export const login=(loginData)=>API.post('/user/login', loginData)
 export const signUp=(signUpData)=>API.post('/user/signup', signUpData)
+export const checkemail = (emailData) => API.post('/user/checkemail', emailData);
+export const changepassword = (passwordData) => API.post('/user/changepassword', passwordData);

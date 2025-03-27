@@ -18,10 +18,10 @@ const dispatch=useDispatch()
         setError(""); // Clear any previous error
         setLoading(true);
         try {
-       const response=await     dispatch(signUp(signUpData))
+       const response=  await dispatch(signUp(signUpData))
        alert("Signup successful");
             // await signup(formData); // Call API function
-            navigate("/"); // Redirect to homepage after successful login
+            navigate("/dasboard"); // Redirect to homepage after successful login
         } catch (error) {
             console.error("Signup failed", error.response?.data?.message || error.message);
             setError(error.response?.data?.message || "Signup failed. Please try again.");
@@ -32,7 +32,7 @@ const dispatch=useDispatch()
 
     return (
         <>
-            <div className="bg-slate-950 h-screen w-screen flex flex-col items-center text-white">
+            <div className="bg-slate-950 -mb-10 h-screen w-full flex flex-col items-center text-white">
                 {/* heading */}
                 <div className="mt-32 text-center text-sky-blue border-2 border-slate-50 rounded-xl p-5 md:w-[35%] sm:w-[60%] w-[80%]">
                     {/* sign in */}

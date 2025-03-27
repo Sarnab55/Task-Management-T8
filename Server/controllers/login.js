@@ -26,3 +26,49 @@ export const login=async(req,res)=>{
     }
 }
 
+export const checkemail = async (req, res) => {
+    const { email } = req.body;
+
+    try {
+        const existingUser = await users.findOne({ email });
+
+        if (!existingUser) {
+            return res.status(404).json({ message: "User does not exist" });
+        }
+
+        res.status(200).json({ message: "User exists and can change password", email: existingUser.email });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
+
+export const changepassword = async (req, res) =>{
+    const {email, password , confirmpassword} = req.body;
+
+    try {
+        // Check if user exists
+        const existingUser = await users.findOne({ email });
+
+        if (!existingUser) {
+            return res.status(404).json({ message: "User does not exist" });
+        }
+
+        // Check if passwords match
+        if (password !== confirmpassword) {
+            return res.status(400).json({ message: "Passwords do not match" });
+        }
+
+        // Hash the new password
+        const hashedPassword = await bcrypt.hash(password, 12);
+
+        // Update user's password
+        existingUser.password = hashedPassword;
+        await existingUser.save();
+
+        res.status(200).json({ message: "Password changed successfully" });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
